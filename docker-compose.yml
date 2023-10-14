@@ -47,7 +47,7 @@ services:
       - "postgres"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`localhost`)"
+      - "traefik.http.routers.backend.rule=Host(`localhost`, `127.0.0.1`)"
       - "traefik.http.routers.backend.entrypoints=api"
       - "traefik.http.services.backend.loadbalancer.server.port=8888"
     networks:
@@ -65,7 +65,7 @@ services:
       - NODE_ENV=development
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`localhost`)"
+      - "traefik.http.routers.frontend.rule=Host(`localhost`, `127.0.0.1`)"
       - "traefik.http.routers.frontend.entrypoints=web"
 
     networks:
