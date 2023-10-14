@@ -1,0 +1,3 @@
+[submodule "services/parking_permit"]
+	path = services/parking_permit
+	url = git@github.com:sanderkvale/ServiceUni_Parking.git
