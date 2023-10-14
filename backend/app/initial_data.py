@@ -16,6 +16,8 @@ def init() -> None:
             password="admin",
             is_active=True,
             is_superuser=True,
+            first_name="Admin",
+            last_name="User",
         ),
     )
 

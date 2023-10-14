@@ -28,7 +28,8 @@ Run the build script:
 ```bash
 ./scripts/build.sh
 ```
-And navigate to http://localhost:8000
+
+And navigate to http://localhost
 
 
 Auto-generated FastAPI docs will be at
