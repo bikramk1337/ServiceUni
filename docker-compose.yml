@@ -9,16 +9,18 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.api.address=:8000"
+      - "--entrypoints.parking_permit.address=:8001"
     ports:
       - 80:80
       - 8000:8000
+      - 8001:8001
       - 8080:8080 # Traefik Dashboard
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - web
 
-  postgres:
+  postgres_backend:
     image: postgres:12
     restart: always
     environment:
@@ -42,14 +44,46 @@ services:
       - ./.docker/.ipython:/root/.ipython:cached
     environment:
       PYTHONPATH: .
-      DATABASE_URL: 'postgresql://postgres:postgres@postgres:5432/postgres'
+      DATABASE_URL: 'postgresql://postgres:postgres@postgres_backend:5432/postgres'
     depends_on:
-      - "postgres"
+      - "postgres_backend"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`localhost`, `127.0.0.1`)"
       - "traefik.http.routers.backend.entrypoints=api"
       - "traefik.http.services.backend.loadbalancer.server.port=8888"
+    networks:
+      - web
+
+  postgres_parking_permit:
+    image: postgres:12
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: parking_permit
+    ports:
+      - '5001:5432'
+    volumes:
+      - parking-permit-db-data:/var/lib/postgresql/data:cached
+    networks:
+      - web
+
+  parking_permit:
+    build:
+      context: ./services/parking_permit
+      dockerfile: Dockerfile
+    volumes:
+      - ./services/parking_permit:/app/:cached
+    depends_on:
+      - "postgres_parking_permit"
+    environment:
+      DATABASE_URL: 'postgresql://postgres:postgres@postgres_parking_permit:5432/parking_permit'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.parking_permit.rule=Host(`localhost`, `127.0.0.1`)"
+      - "traefik.http.routers.parking_permit.entrypoints=parking_permit"
+      - "traefik.http.services.parking_permit.loadbalancer.server.port=8001"
     networks:
       - web
 
@@ -73,6 +107,7 @@ services:
 
 volumes:
   db-data:
+  parking-permit-db-data:
   node_modules:
 
 networks:
