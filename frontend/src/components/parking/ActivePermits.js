@@ -10,22 +10,36 @@ export default class ActivePermits extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`${process.env.REACT_APP_API_URL}/active-permits/`)
+    const token = localStorage.getItem('jwt_token');
+    const headers = {
+        'Authorization': `Bearer ${token}`
+    };
+
+    axios.get(`${process.env.REACT_APP_API_URL}/active-permits/`, { headers: headers })
       .then(res => {
         const applications = res.data;
         this.setState({ applications });
       })
       .catch(error => {
-        console.log(error)
-    })
+        console.log(error);
+        // Consider handling 401 or 403 errors here to redirect or show a message
+      })
   }
 
   revokePermit = id => {
-    axios
-        .put(`${process.env.REACT_APP_API_URL}/revoke/${id}`)
+    const token = localStorage.getItem('jwt_token');
+    const headers = {
+        'Authorization': `Bearer ${token}`
+    };
+
+    axios.put(`${process.env.REACT_APP_API_URL}/revoke/${id}`, { headers: headers })
         .then((res) => {
           console.log(res.data);
           window.location.reload(false);
+        })
+        .catch(error => {
+          console.log(error);
+          // Consider handling 401 or 403 errors here to redirect or show a message
         });
   };
 
@@ -35,7 +49,7 @@ export default class ActivePermits extends React.Component {
         <h1 className='border-bottom pb-3 mb-5 w-50 text-center mx-auto'>
           Active parking permits
         </h1>
-        <div class="col col-lg-10 mx-auto">
+        <div className="col col-lg-10 mx-auto">
           <Table striped bordered hover >
               <thead>
                   <tr>
@@ -56,7 +70,7 @@ export default class ActivePermits extends React.Component {
                           <td>{item.vehicle_registration}</td>
                           <td>{item.expiry_date}</td>
                           <td>
-                              <button title="Revoke permit" type="button" class="btn btn-danger m-1" onClick={() => this.revokePermit(item.id)}><FontAwesomeIcon icon={faX} style={{ color: 'white' }} /></button>
+                              <button title="Revoke permit" type="button" className="btn btn-danger m-1" onClick={() => this.revokePermit(item.id)}><FontAwesomeIcon icon={faX} style={{ color: 'white' }} /></button>
                           </td>
                       </tr>
                   ))}
@@ -64,6 +78,6 @@ export default class ActivePermits extends React.Component {
           </Table>
         </div>
       </>
-      );
+    );
   }
 }

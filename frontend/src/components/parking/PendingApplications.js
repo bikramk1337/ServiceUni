@@ -10,19 +10,28 @@ export default class PendingApplications extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`${process.env.REACT_APP_API_URL}/pending-permits/`)
+    const token = localStorage.getItem('jwt_token');
+    const headers = {
+        'Authorization': `Bearer ${token}`
+    };
+
+    axios.get(`${process.env.REACT_APP_API_URL}/pending-permits/`, { headers: headers })
       .then(res => {
         const applications = res.data;
         this.setState({ applications });
       })
       .catch(error => {
-        console.log(error)
-    })
+        console.log(error);
+      })
   }
-  
+
   approveApplication = id => {
-    axios
-        .put(`${process.env.REACT_APP_API_URL}/approve/${id}`)
+    const token = localStorage.getItem('jwt_token');
+    const headers = {
+        'Authorization': `Bearer ${token}`
+    };
+
+    axios.put(`${process.env.REACT_APP_API_URL}/approve/${id}`, { headers: headers })
         .then((res) => {
           console.log(res.data);
           window.location.reload(false);
@@ -30,8 +39,12 @@ export default class PendingApplications extends React.Component {
   };
 
   rejectApplication = id => {
-    axios
-        .put(`${process.env.REACT_APP_API_URL}/reject/${id}`)
+    const token = localStorage.getItem('jwt_token');
+    const headers = {
+        'Authorization': `Bearer ${token}`
+    };
+
+    axios.put(`${process.env.REACT_APP_API_URL}/reject/${id}`, { headers: headers })
         .then((res) => {
           console.log(res.data);
           window.location.reload(false);
@@ -44,8 +57,8 @@ export default class PendingApplications extends React.Component {
         <h1 className='border-bottom pb-3 mb-5 w-50 text-center mx-auto'>
           Pending parking applications
         </h1>
-        <div class="col col-lg-10 mx-auto">
-          <Table striped bordered hover >
+        <div className="col col-lg-10 mx-auto">
+          <Table striped bordered hover>
               <thead>
                   <tr>
                       <th>Id</th>
@@ -63,8 +76,8 @@ export default class PendingApplications extends React.Component {
                           <td>{item.permit_type}</td>
                           <td>{item.vehicle_registration}</td>
                           <td>
-                              <button title="Approve application" type="button" class="btn btn-success m-1" onClick={() => this.approveApplication(item.id)}><FontAwesomeIcon icon={faCheck} style={{ color: 'white' }} /></button>
-                              <button title="Reject application" type="button" class="btn btn-danger m-1" onClick={() => this.rejectApplication(item.id)}><FontAwesomeIcon icon={faX} style={{ color: 'white' }} /></button>
+                              <button title="Approve application" type="button" className="btn btn-success m-1" onClick={() => this.approveApplication(item.id)}><FontAwesomeIcon icon={faCheck} style={{ color: 'white' }} /></button>
+                              <button title="Reject application" type="button" className="btn btn-danger m-1" onClick={() => this.rejectApplication(item.id)}><FontAwesomeIcon icon={faX} style={{ color: 'white' }} /></button>
                           </td>
                       </tr>
                   ))}
@@ -72,6 +85,6 @@ export default class PendingApplications extends React.Component {
           </Table>
         </div>
       </>
-      );
+    );
   }
 }

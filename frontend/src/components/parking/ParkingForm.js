@@ -37,7 +37,13 @@ export class ParkingForm extends Component {
     submitHandler = (e) => {
         e.preventDefault()
         console.log(this.state)
-        axios.post(`${process.env.REACT_APP_API_URL}/permits/`, this.state)
+
+        const token = localStorage.getItem('jwt_token');
+        const headers = {
+            'Authorization': `Bearer ${token}`
+        };
+
+        axios.post(`${process.env.REACT_APP_API_URL}/permits/`, this.state, { headers: headers })
             .then(response => {
                 console.log(response)
                 window.location.href = "/thanks"
