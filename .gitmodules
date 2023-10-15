@@ -1,3 +1,6 @@
 [submodule "services/parking_permit"]
 	path = services/parking_permit
 	url = git@github.com:sanderkvale/ServiceUni_Parking.git
+[submodule "services/student_card"]
+	path = services/student_card
+	url = git@github.com:xm694/StudentCardServices.git
