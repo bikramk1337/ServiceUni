@@ -15,7 +15,7 @@ export const Header = () => {
   return (
     <Navbar bg="info" expand="md">
       <Container>
-        <Navbar.Brand> <h2> SerUni library management</h2></Navbar.Brand>
+        <Navbar.Brand> <h2> Service Uni library management</h2></Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
