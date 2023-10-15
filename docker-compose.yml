@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 
 services:
   traefik:
@@ -10,10 +10,12 @@ services:
       - "--entrypoints.web.address=:80"
       - "--entrypoints.api.address=:8000"
       - "--entrypoints.parking_permit.address=:8001"
+      - "--entrypoints.student_card.address=:8002"
     ports:
       - 80:80
       - 8000:8000
       - 8001:8001
+      - 8002:8002
       - 8080:8080 # Traefik Dashboard
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -27,7 +29,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - '5000:5432'
+      - "5000:5432"
     volumes:
       - db-data:/var/lib/postgresql/data:cached
     networks:
@@ -44,7 +46,7 @@ services:
       - ./.docker/.ipython:/root/.ipython:cached
     environment:
       PYTHONPATH: .
-      DATABASE_URL: 'postgresql://postgres:postgres@postgres_backend:5432/postgres'
+      DATABASE_URL: "postgresql://postgres:postgres@postgres_backend:5432/postgres"
     depends_on:
       - "postgres_backend"
     labels:
@@ -63,7 +65,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: parking_permit
     ports:
-      - '5001:5432'
+      - "5001:5432"
     volumes:
       - parking-permit-db-data:/var/lib/postgresql/data:cached
     networks:
@@ -78,12 +80,44 @@ services:
     depends_on:
       - "postgres_parking_permit"
     environment:
-      DATABASE_URL: 'postgresql://postgres:postgres@postgres_parking_permit:5432/parking_permit'
+      DATABASE_URL: "postgresql://postgres:postgres@postgres_parking_permit:5432/parking_permit"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.parking_permit.rule=Host(`localhost`, `127.0.0.1`)"
       - "traefik.http.routers.parking_permit.entrypoints=parking_permit"
       - "traefik.http.services.parking_permit.loadbalancer.server.port=8001"
+    networks:
+      - web
+
+  postgres_student_card:
+    image: postgres:12
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: student_card
+    ports:
+      - "5002:5432"
+    volumes:
+      - student-card-db-data:/var/lib/postgresql/data:cached
+    networks:
+      - web
+
+  student_card:
+    build:
+      context: ./services/student_card
+      dockerfile: Dockerfile
+    volumes:
+      - ./services/student_card:/app/:cached
+    depends_on:
+      - "postgres_student_card"
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@postgres_student_card:5432/student_card"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.student_card.rule=Host(`localhost`, `127.0.0.1`)"
+      - "traefik.http.routers.student_card.entrypoints=student_card"
+      - "traefik.http.services.student_card.loadbalancer.server.port=8002"
     networks:
       - web
 
@@ -93,7 +127,7 @@ services:
       dockerfile: Dockerfile
     stdin_open: true
     volumes:
-      - './frontend:/app:cached'
+      - "./frontend:/app:cached"
       - node_modules:/app/node_modules
     environment:
       - NODE_ENV=development
@@ -101,13 +135,14 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`localhost`, `127.0.0.1`)"
       - "traefik.http.routers.frontend.entrypoints=web"
-      - "traefik.http.services.frontend.loadbalancer.server.port=3000" 
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
     networks:
       - web
 
 volumes:
   db-data:
   parking-permit-db-data:
+  student-card-db-data:
   node_modules:
 
 networks:
