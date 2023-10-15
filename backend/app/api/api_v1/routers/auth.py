@@ -28,8 +28,17 @@ async def login(
         permissions = "admin"
     else:
         permissions = "user"
+
+    access_token_data = {
+        "id": user.id,
+        "sub": user.email,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "permissions": permissions,
+    }
+
     access_token = security.create_access_token(
-        data={"sub": user.email, "permissions": permissions},
+        data=access_token_data,
         expires_delta=access_token_expires,
     )
 
