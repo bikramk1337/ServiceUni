@@ -31,7 +31,7 @@ export default class PendingApplications extends React.Component {
         'Authorization': `Bearer ${token}`
     };
 
-    axios.put(`${process.env.REACT_APP_API_URL}/approve/${id}`, { headers: headers })
+    axios.put(`${process.env.REACT_APP_API_URL}/approve/${id}`, {}, { headers: headers })
         .then((res) => {
           console.log(res.data);
           window.location.reload(false);
@@ -44,7 +44,7 @@ export default class PendingApplications extends React.Component {
         'Authorization': `Bearer ${token}`
     };
 
-    axios.put(`${process.env.REACT_APP_API_URL}/reject/${id}`, { headers: headers })
+    axios.put(`${process.env.REACT_APP_API_URL}/reject/${id}`, {}, { headers: headers })
         .then((res) => {
           console.log(res.data);
           window.location.reload(false);

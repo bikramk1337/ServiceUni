@@ -32,7 +32,7 @@ export default class ActivePermits extends React.Component {
         'Authorization': `Bearer ${token}`
     };
 
-    axios.put(`${process.env.REACT_APP_API_URL}/revoke/${id}`, { headers: headers })
+    axios.put(`${process.env.REACT_APP_API_URL}/revoke/${id}`, {}, { headers: headers })
         .then((res) => {
           console.log(res.data);
           window.location.reload(false);
