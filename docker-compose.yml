@@ -3,6 +3,7 @@ version: "3.7"
 services:
   traefik:
     image: traefik:v2.5
+    container_name: traefik
     command:
       - "--api.insecure=true"
       - "--providers.docker=true"
@@ -24,6 +25,7 @@ services:
 
   postgres_backend:
     image: postgres:12
+    container_name: db-backend
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -39,6 +41,7 @@ services:
     build:
       context: backend
       dockerfile: Dockerfile
+    container_name: backend
     command: python app/main.py
     tty: true
     volumes:
@@ -59,6 +62,7 @@ services:
 
   postgres_parking_permit:
     image: postgres:12
+    container_name: db-parking_permit
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -75,6 +79,7 @@ services:
     build:
       context: ./services/parking_permit
       dockerfile: Dockerfile
+    container_name: parking_permit
     volumes:
       - ./services/parking_permit:/app/:cached
     depends_on:
@@ -91,6 +96,7 @@ services:
 
   postgres_student_card:
     image: postgres:12
+    container_name: db-student_card
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -107,6 +113,7 @@ services:
     build:
       context: ./services/student_card
       dockerfile: Dockerfile
+    container_name: student_card
     volumes:
       - ./services/student_card:/app/:cached
     depends_on:
@@ -125,6 +132,7 @@ services:
     build:
       context: frontend
       dockerfile: Dockerfile
+    container_name: frontend
     stdin_open: true
     volumes:
       - "./frontend:/app:cached"
