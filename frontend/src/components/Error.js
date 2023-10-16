@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from "react-router-dom";
  
 export default function Error() {
   return (
@@ -7,6 +8,7 @@ export default function Error() {
        Yikes
      </h1>
      <p>Our dev team has done an oopsie, we hope to be up and running again soon!</p>
+     <Link to="/" className="btn btn-primary mt-4">Back to homepage</Link>
     </div>
   )
 }

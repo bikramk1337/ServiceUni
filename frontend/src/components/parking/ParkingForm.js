@@ -2,13 +2,14 @@ import React, { Component } from 'react'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios'
+import { getUser } from '../Utils';
 
 export class ParkingForm extends Component {
     constructor(props) {
       super(props)
     
       this.state = {
-        applicant_name: '',
+        applicant_name: getUser().id,
         vehicle_registration: '',
         expiry_date: '0001-01-01',
         is_active: false,
@@ -21,9 +22,8 @@ export class ParkingForm extends Component {
         axios
             .get(`${process.env.REACT_APP_API_URL}/permit-types/`)
             .then((response) => {
-                let thedata = response.data;
-                this.setState({permitTypes:thedata });
-                console.log(thedata);
+                let permitdata = response.data;
+                this.setState({permitTypes:permitdata });
             })
             .catch((error) => {
                 console.log(error);
@@ -60,8 +60,7 @@ export class ParkingForm extends Component {
             <div>
                 <Form className="col col-lg-4 col-8  mx-auto" onSubmit={this.submitHandler}>
                     <Form.Group className="mb-3">
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control type="text" name="applicant_name" placeholder='Enter name'required value={applicant_name} onChange={this.changeHandler} />
+                        <Form.Control hidden type="number" name="applicant_name" placeholder='Enter name'required value={applicant_name} onChange={this.changeHandler} />
                     </Form.Group>
 
                     <Form.Group className='mb-3'>
