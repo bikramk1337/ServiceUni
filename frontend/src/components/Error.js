@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
  
 export default function Error() {
   return (
-    <div>
+    <div className='content'>
      <h1 className='border-bottom pb-3 mb-5 w-50 text-center mx-auto'>
        Yikes
      </h1>

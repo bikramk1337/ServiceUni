@@ -53,7 +53,7 @@ export default class PendingIDs extends React.Component {
 
   render() {
     return (
-      <>
+      <div className='content'>
         <h1 className='border-bottom pb-3 mb-5 w-50 text-center mx-auto'>
           Pending ID applications
         </h1>
@@ -86,7 +86,7 @@ export default class PendingIDs extends React.Component {
               </tbody>
           </Table>
         </div>
-      </>
+      </div>
     );
   }
 }
