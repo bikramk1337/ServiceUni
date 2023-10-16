@@ -73,7 +73,7 @@ export class ParkingForm extends Component {
                         onChange={this.changeHandler}>
                             <option value="">Please select permit type</option>
                             {this.state.permitTypes.map((permitType) => (
-                                <option value={permitType.id}>{permitType.type_name}</option>
+                                <option key={permitType.id}value={permitType.id}>{permitType.type_name}</option>
                             ))}
                         </Form.Control>
                     </Form.Group>

@@ -12,9 +12,8 @@ export default function Home() {
 
   const [isAdminUser, setIsAdmin] = useState()
   useEffect(() => {
-    var test = isAdmin();
-    console.log(test);
-    setIsAdmin(test)
+    var admin = isAdmin();
+    setIsAdmin(admin)
   }, [isLoggedIn])
 
   return (

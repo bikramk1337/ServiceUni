@@ -51,6 +51,7 @@ export default function Navigation() {
                 <Nav className="justify-content-end flex-grow-1">
                   <NavDropdown title="Parking Permit" id="collapsible-nav-dropdown">
                     { !isAdminUser ? <NavDropdown.Item as={Link} to="/parking-permit" eventKey="1">Apply</NavDropdown.Item> : null }
+                    { !isAdminUser ? <NavDropdown.Item as={Link} to="/my-permits" eventKey="1">My permits</NavDropdown.Item> : null }
                     { isAdminUser ? <NavDropdown.Item as={Link} to='/pending-applications' eventKey="3" className='mb-0'>Pending applications</NavDropdown.Item> : null }
                     { isAdminUser ? <NavDropdown.Item as={Link} to='/active-permits' eventKey="3" className='mb-0'>Active permits</NavDropdown.Item> : null }
                   </NavDropdown>

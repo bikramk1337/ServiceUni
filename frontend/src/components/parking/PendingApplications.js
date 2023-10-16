@@ -70,7 +70,7 @@ export default class PendingApplications extends React.Component {
               </thead>
               <tbody>
                   {this.state.applications.map((item) => (
-                      <tr key={item.task_id}>
+                      <tr key={item.id}>
                           <td>{item.id}</td>
                           <td>{item.applicant_name}</td>
                           <td>{item.permit_type}</td>

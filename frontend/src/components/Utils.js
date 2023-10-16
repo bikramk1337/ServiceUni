@@ -7,8 +7,6 @@ export function getUser(){
 
     const user = JSON.parse(window.atob(base64))
 
-    console.log(user)
-  
     return user
   }
 
@@ -20,8 +18,6 @@ export function getUser(){
       const base64 = base64Url.replace('-', '+').replace('_', '/');
     
       const roles = JSON.parse(window.atob(base64)).permissions;
-
-      console.log(roles)
     
       if ( roles === 'admin' ) {
         return true;

@@ -61,21 +61,21 @@ export default class PendingIDs extends React.Component {
           <Table striped bordered hover>
               <thead>
                   <tr>
-                      <th>Name</th>
-                      <th>Phone</th>
-                      <th>Email</th>
-                      <th>Student Number</th>
-                      <th>Status</th>
-                      <th>Actions</th>
+                    <th>Student Number</th>
+                    <th>Name</th>
+                    <th>Program</th>
+                    <th>Card Number</th>                      
+                    <th>Status</th>
+                    <th>Actions</th>
                   </tr>
               </thead>
               <tbody>
                   {this.state.requests.map((item) => (
                       <tr key={item.id}>
-                          <td>{item.name}</td>
-                          <td>{item.phone}</td>
-                          <td>{item.email}</td>
                           <td>{item.stud_number}</td>
+                          <td>{item.name}</td>
+                          <td>{item.program}</td>
+                          <td>{item.card_number}</td>
                           <td>{item.status}</td>
                           <td>
                               <button title="Approve application" type="button" className="btn btn-success m-1" onClick={() => this.approveApplication(item.id)}><FontAwesomeIcon icon={faCheck} style={{ color: 'white' }} /></button>
