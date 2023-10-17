@@ -9,23 +9,24 @@ export default class ActivePermits extends React.Component {
     applications: []
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const token = localStorage.getItem('jwt_token');
     const headers = {
         'Authorization': `Bearer ${token}`
     };
-
-    axios.get(`${process.env.REACT_APP_API_URL}/active-permits/`, { headers: headers })
-      .then(res => {
-        const applications = res.data;
-        this.setState({ applications });
-      })
-      .catch(error => {
-        console.log(error);
-        // Consider handling 401 or 403 errors here to redirect or show a message
-      })
+  
+    try {
+      const { data: applications } = await axios.get(`${process.env.REACT_APP_API_URL}/active-permits/`, { headers });
+      for (let app of applications) {
+        const { data: user } = await axios.get(`${process.env.REACT_APP_AUTH_API_URL}/api/v1/users/${app.user_id}`, { headers });
+        app.user = user;
+      }
+      this.setState({ applications });
+    } catch (error) {
+      console.log(error);
+    }
   }
-
+  
   revokePermit = id => {
     const token = localStorage.getItem('jwt_token');
     const headers = {
@@ -50,34 +51,41 @@ export default class ActivePermits extends React.Component {
           Active parking permits
         </h1>
         <div className="col col-lg-10 mx-auto">
-          <Table striped bordered hover >
-              <thead>
-                  <tr>
-                      <th>Id</th>
-                      <th>Applicant</th>
-                      <th>Permit Type</th>
-                      <th>Vehicle Registration</th>
-                      <th>Expiry Date</th>
-                      <th>Actions</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  {this.state.applications.map((item) => (
-                      <tr key={item.id}>
-                          <td>{item.id}</td>
-                          <td>{item.applicant_name}</td>
-                          <td>{item.permit_type}</td>
-                          <td>{item.vehicle_registration}</td>
-                          <td>{item.expiry_date}</td>
-                          <td>
-                              <button title="Revoke permit" type="button" className="btn btn-danger m-1" onClick={() => this.revokePermit(item.id)}><FontAwesomeIcon icon={faX} style={{ color: 'white' }} /></button>
-                          </td>
-                      </tr>
-                  ))}
-              </tbody>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                  <th>Id</th>
+                  <th>User ID</th>
+                  <th>User Name</th>
+                  <th>User Email</th>
+                  <th>Permit Type</th>
+                  <th>Vehicle Registration</th>
+                  <th>Expiry Date</th>
+                  <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.state.applications.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.id}</td>
+                  <td>{item.user_id}</td>
+                  <td>{item.user ? `${item.user.first_name} ${item.user.last_name}` : 'Loading...'}</td>
+                  <td>{item.user ? item.user.email : 'Loading...'}</td>
+                  <td>{item.permit_type}</td>
+                  <td>{item.vehicle_registration}</td>
+                  <td>{item.expiry_date}</td>
+                  <td>
+                      <button title="Revoke permit" type="button" className="btn btn-danger m-1" onClick={() => this.revokePermit(item.id)}>
+                        <FontAwesomeIcon icon={faX} style={{ color: 'white' }} />
+                      </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </Table>
         </div>
       </div>
     );
   }
+  
 }

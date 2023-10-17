@@ -5,24 +5,35 @@ import { getUser } from '../Utils';
 
 export default class MyPermits extends React.Component {
   state = {
-    applications: []
+    applications: [],
+    error: null
   }
 
   componentDidMount() {
     const user = getUser();
+    if (!user) {
+      this.setState({ error: "User not found." });
+      return;
+    }
+
     const token = localStorage.getItem('jwt_token');
     const headers = {
         'Authorization': `Bearer ${token}`
     };
 
-    axios.get(`${process.env.REACT_APP_API_URL}/permits/${user ? user.id : ''}`, { headers: headers })
+    axios.get(`${process.env.REACT_APP_API_URL}/permits/${user.id}`, { headers: headers })
       .then(res => {
-        const applications = res.data;
-        this.setState({ applications });
+        this.setState({ applications: res.data });
       })
       .catch(error => {
         console.log(error);
-        // Consider handling 401 or 403 errors here to redirect or show a message
+        if (error.response && error.response.status === 404) {
+          this.setState({ error: "No active permits found." });
+        } else if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+          this.setState({ error: "Unauthorized. Please log in." });
+        } else {
+          this.setState({ error: "An error occurred. Please try again later." });
+        }
       })
   }
 
@@ -44,13 +55,22 @@ export default class MyPermits extends React.Component {
   };
 
   render() {
-      return (
-        <div className='content'>
-          <h1 className='border-bottom pb-3 mb-5 w-50 text-center mx-auto'>
-            Your active parking permits
-          </h1>
+    const { applications, error } = this.state;
+    return (
+      <div className='content'>
+        <h1 className='border-bottom pb-3 mb-5 w-50 text-center mx-auto'>
+          Your active parking permits
+        </h1>
+
+        {error && <div className="alert alert-danger">{error}</div>}
+
+        {!error && applications.length === 0 && (
+          <div className="alert alert-info">No permits to display.</div>
+        )}
+
+        {applications.length > 0 && (
           <div className="col col-lg-10 mx-auto">
-            <Table striped bordered hover >
+            <Table striped bordered hover>
                 <thead>
                     <tr>
                         <th>Permit Number</th>
@@ -60,7 +80,7 @@ export default class MyPermits extends React.Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {this.state.applications.map((item) => (
+                    {applications.map((item) => (
                         <tr key={item.id}>
                             <td>{item.id}</td>
                             <td>{item.permit_type}</td>
@@ -71,7 +91,8 @@ export default class MyPermits extends React.Component {
                 </tbody>
             </Table>
           </div>
-        </div>
-      );
-    }
+        )}
+      </div>
+    );
+  }
 }
