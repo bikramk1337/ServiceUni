@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
@@ -29,7 +27,6 @@ export default function Login() {
       });
 
       const data = await response.json();
-      console.log(data);
 
       if (response.ok) {
         // Store the token securely
@@ -44,37 +41,42 @@ export default function Login() {
   }
 
   return (
-    <div>
-      <h1 className='border-bottom pb-3 mb-5 w-50 text-center mx-auto'>
-        Sign in
-      </h1>
+    <div className="Auth-form-container">
+      <form className="Auth-form" onSubmit={handleSubmit}>
+        <div className="Auth-form-content">
+          <h3 className="Auth-form-title">Sign In</h3>
 
-      {error && <p className="text-danger">{error}</p>}
+          {error && <p className="text-danger mt-2">{error}</p>}
 
-      <Form className="col col-lg-4 col-8  mx-auto" onSubmit={handleSubmit}>
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email</Form.Label>
-          <Form.Control 
-            type="email" 
-            placeholder="Enter email" 
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Form.Group>
+          <div className="form-group mt-3">
+            <label>Email address</label>
+            <input
+              type="email"
+              className="form-control mt-1"
+              placeholder="Enter email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
 
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control 
-            type="password" 
-            placeholder="Password" 
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </Form.Group>
-        <Button variant="primary" type="submit">
-          Sign in 
-        </Button>
-      </Form>
+          <div className="form-group mt-3">
+            <label>Password</label>
+            <input
+              type="password"
+              className="form-control mt-1"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <div className="d-grid gap-2 mt-3">
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
   )
 }

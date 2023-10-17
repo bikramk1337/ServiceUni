@@ -3,8 +3,19 @@ import { Link } from "react-router-dom";
 import idimage from "./../img/idcard.jpg";
 import parkingimage from "./../img/parking.jpg";
 import roomimage from "./../img/room.jpg";
+import { isAdmin } from './Utils';
+import { useAuth } from './AuthContext'; 
+import { useState, useEffect } from 'react';
 
 export default function Home() {
+  const { isLoggedIn } = useAuth();
+
+  const [isAdminUser, setIsAdmin] = useState()
+  useEffect(() => {
+    var admin = isAdmin();
+    setIsAdmin(admin)
+  }, [isLoggedIn])
+
   return (
     <section className="mx-auto pb-5" style={{ width: 80 + "%" }}>
       <h1 className="mb-5 border-bottom pb-3 mb-5 w-50 text-center mx-auto border-secondary">
@@ -27,9 +38,8 @@ export default function Home() {
             <div className="card-body">
               <h5 className="card-title">Parking Permit</h5>
               <p className="card-text">Apply for your parking permit today!</p>
-              <Link to="/parking-permit" className="btn btn-primary">
-                Apply
-              </Link>
+              {isAdminUser ?  <Link to="/pending-applications" className="btn btn-primary">Pending Applications</Link> : 
+                              <Link to="/parking-permit" className="btn btn-primary">Apply</Link> }
             </div>
           </div>
         </div>
@@ -43,9 +53,7 @@ export default function Home() {
             <div className="card-body">
               <h5 className="card-title">ID Card</h5>
               <p className="card-text">Get your student id card here</p>
-              <Link to="/id-card" className="btn btn-primary">
-                Apply
-              </Link>
+              {isAdminUser ? <Link to="/pending-IDs" className="btn btn-primary">Pending Applications</Link> : <Link to="/id-card" className="btn btn-primary">Apply</Link>}
             </div>
           </div>
         </div>

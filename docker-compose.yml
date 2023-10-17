@@ -10,20 +10,40 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.api.address=:8000"
+      - "--entrypoints.portainer.address=:9000"
       - "--entrypoints.parking_permit.address=:8001"
       - "--entrypoints.student_card.address=:8002"
       - "--entrypoints.library_service.address=:8003"
+      - "--entrypoints.library_client.address=:3001"
     ports:
       - 80:80
+      - 3001:3001
       - 8000:8000
       - 8001:8001
       - 8002:8002
       - 8003:8003
       - 8080:8080 # Traefik Dashboard
+      - 9000:9000 # Portainer
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - web
+
+  portainer:
+    image: portainer/portainer
+    container_name: portainer
+    command: -H unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer-data:/data
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.rule=Host(`localhost`, `127.0.0.1`)"
+      - "traefik.http.routers.portainer.entrypoints=portainer"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+
 
   postgres_backend:
     image: postgres:12
@@ -154,8 +174,6 @@ services:
     build:
       context: ./services/library_service/client
       dockerfile: Dockerfile
-    ports:
-      - 3001:3000
     networks:
       - web
     volumes:
@@ -166,7 +184,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.library_client.rule=Host(`localhost`, `127.0.0.1`)"
-      - "traefik.http.routers.library_client.entrypoints=web"
+      - "traefik.http.routers.library_client.entrypoints=library_client"
       - "traefik.http.services.library_client.loadbalancer.server.port=3000"
 
   library_api:
@@ -202,6 +220,7 @@ services:
 
 
 volumes:
+  portainer-data:
   db-data:
   parking-permit-db-data:
   student-card-db-data:
