@@ -2,14 +2,18 @@ import React, { Component } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import { getUser } from "../Utils";
+import { getUser, getUserDetails } from "../Utils";
 
 export class ParkingForm extends Component {
   constructor(props) {
     super(props);
+    const userDetails = getUserDetails();
 
     this.state = {
       user_id: getUser().id,
+      first_name: userDetails.firstName,
+      last_name: userDetails.lastName,
+      email: userDetails.email,
       vehicle_registration: "",
       expiry_date: "0001-01-01",
       is_active: false,
@@ -58,13 +62,34 @@ export class ParkingForm extends Component {
   };
 
   render() {
-    const { user_id, vehicle_registration, permit_type } = this.state;
+    const { user_id, vehicle_registration, permit_type, first_name, last_name, email } = this.state;
+    const full_name = `${first_name} ${last_name}`;
+
     return (
       <div>
         <Form
-          className="col col-lg-4 col-8  mx-auto"
+          className="col col-lg-4 col-8 mx-auto"
           onSubmit={this.submitHandler}
         >
+          <Form.Group className="mb-3">
+            <Form.Label className="text-left">Name</Form.Label>
+            <Form.Control
+              readOnly
+              type="text"
+              value={full_name}
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label className="text-left">Email</Form.Label>
+            <Form.Control
+              readOnly
+              type="email"
+              value={email}
+            />
+          </Form.Group>
+
+          {/* Hidden user ID input */}
           <Form.Group className="mb-3">
             <Form.Control
               hidden
@@ -77,7 +102,7 @@ export class ParkingForm extends Component {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Permit Type</Form.Label>
+            <Form.Label className="text-left">Permit Type</Form.Label>
             <Form.Control
               as="select"
               name="permit_type"
@@ -95,7 +120,7 @@ export class ParkingForm extends Component {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Vehicle Registration</Form.Label>
+            <Form.Label className="text-left">Vehicle Registration</Form.Label>
             <Form.Control
               name="vehicle_registration"
               placeholder="Enter vehicle registration"
@@ -113,3 +138,5 @@ export class ParkingForm extends Component {
     );
   }
 }
+
+export default ParkingForm;
