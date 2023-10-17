@@ -27,7 +27,7 @@ export default function Navigation() {
 
   return (
     <>
-    <div className='mb-5'>
+    <div className='mb-5 nav-header'>
       {[false].map((expand) => (
         <Navbar key={expand} expand={expand} collapseOnSelect className="bg-primary navbar-dark p-3">
           <Container fluid>

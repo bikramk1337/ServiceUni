@@ -1,5 +1,18 @@
 .App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   text-align: center;
+}
+
+.App-content {
+  flex: 1 0 auto;
+}
+
+.Routes {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .App-logo {
@@ -15,7 +28,7 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -49,12 +62,56 @@
   }
 }
 
-.card-body{
+.card-body {
   margin-top: 5%;
   margin-bottom: 5%;
   min-height: 10vw;
 }
 
-.nav-link:hover{
+.nav-link:hover {
   color: rgb(13, 110, 253) !important;
+}
+
+.Auth-form-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Auth-form {
+  width: 420px;
+  box-shadow: rgb(0 0 0 / 16%) 1px 1px 10px;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  border-radius: 8px;
+  background-color: white;
+}
+
+.Auth-form-content {
+  padding-left: 12%;
+  padding-right: 12%;
+}
+
+.Auth-form-content label {
+  text-align: left;
+  display: block; 
+}
+
+.Auth-form-title {
+  text-align: center;
+  margin-bottom: 1em;
+  font-size: 24px;
+  color: rgb(34, 34, 34);
+  font-weight: 800;
+}
+
+label {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgb(34, 34, 34);
+}
+
+footer {
+  flex-shrink: 0;
 }

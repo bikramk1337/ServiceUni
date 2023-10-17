@@ -29,8 +29,9 @@ function App() {
 
   return (
     <div className="App">
-      <Navigation /> 
-        
+      <Navigation className="Navigation" /> 
+
+      <div className="App-content">
         <Routes>
           <Route path="/" element={isLoggedIn ? <Home /> : <Navigate to="/sign-in" />} />
           <Route path="/id-card" element={!isAdminUser ? <IdCard /> : <Navigate to="/unauthorized" />} />
@@ -44,7 +45,9 @@ function App() {
           <Route path="/unauthorized" element={<Unauthorized />} />
           <Route path="/my-permits" element={<MyPermits />} />
         </Routes>
-        <Footer />
+      </div>
+
+      <Footer className="footer" />
     </div>
   );
 }
