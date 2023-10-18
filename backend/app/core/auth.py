@@ -1,7 +1,7 @@
 import jwt
 from fastapi import Depends, HTTPException, status
 from jwt import PyJWTError
-
+from jwt.exceptions import ExpiredSignatureError
 from app.db import models, schemas, session
 from app.db.crud import get_user_by_email, create_user
 from app.core import security
@@ -24,6 +24,12 @@ async def get_current_user(
             raise credentials_exception
         permissions: str = payload.get("permissions")
         token_data = schemas.TokenData(email=email, permissions=permissions)
+    except ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token has expired",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     except PyJWTError:
         raise credentials_exception
     user = get_user_by_email(db, token_data.email)
