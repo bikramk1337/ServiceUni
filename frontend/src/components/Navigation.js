@@ -57,7 +57,8 @@ export default function Navigation() {
                   </NavDropdown>
                   <NavDropdown title="ID Card" id="collapsible-nav-dropdown-ID">
                     { !isAdminUser ? <NavDropdown.Item as={Link} to="/id-card" eventKey="1">Apply</NavDropdown.Item> : null}
-                    { isAdminUser ? <NavDropdown.Item as={Link} to='/pending-IDs' eventKey="3" className='mb-0'>Pending applications</NavDropdown.Item> : null}
+                    { isAdminUser ? <NavDropdown.Item as={Link} to='/pending-IDs' eventKey="3" className='mb-0'>Pending requests</NavDropdown.Item> : null}
+                    { isAdminUser ? <NavDropdown.Item as={Link} to='/processed-requests' eventKey="3" className='mb-0'>Processed requests</NavDropdown.Item> : null}
                   </NavDropdown>
                   <Nav.Link href="http://localhost:3001" target="_blank" rel="noopener noreferrer" eventKey="3">Library</Nav.Link>             
                 </Nav>
