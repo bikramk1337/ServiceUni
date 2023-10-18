@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import axios from "axios";
 import { getUser, getUserDetails } from "../Utils";
+import { parkingApi } from "../AxiosUtils";
 
 export class ParkingForm extends Component {
   constructor(props) {
@@ -23,8 +23,8 @@ export class ParkingForm extends Component {
   }
 
   componentDidMount() {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/permit-types/`)
+    parkingApi
+      .get(`/permit-types/`)
       .then((response) => {
         let permitdata = response.data;
         this.setState({ permitTypes: permitdata });
@@ -47,8 +47,8 @@ export class ParkingForm extends Component {
       Authorization: `Bearer ${token}`,
     };
 
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/permits/`, this.state, {
+    parkingApi
+      .post(`/permits/`, this.state, {
         headers: headers,
       })
       .then((response) => {
@@ -60,6 +60,7 @@ export class ParkingForm extends Component {
         window.location.href = "/error";
       });
   };
+
 
   render() {
     const { user_id, vehicle_registration, permit_type, first_name, last_name, email } = this.state;

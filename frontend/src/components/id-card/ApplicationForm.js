@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios'
 import { getUser } from '../Utils';
+import { idCardApi } from '../AxiosUtils';
 
 export class ApplicationForm extends Component {
     constructor(props) {
@@ -34,7 +35,7 @@ export class ApplicationForm extends Component {
             'Authorization': `Bearer ${token}`
         };
 
-        axios.post(`${process.env.REACT_APP_ID_API_URL}/apply_student_card/`, this.state, { headers: headers })
+        idCardApi.post(`/apply_student_card/`, this.state, { headers: headers })
             .then(response => {
                 console.log(response)
                 window.location.href = "/thanks"

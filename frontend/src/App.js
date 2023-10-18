@@ -16,6 +16,7 @@ import PendingIDs from './components/id-card/PendingIDs';
 import { isAdmin } from './components/Utils';
 import Unauthorized from './components/Unauthorized';
 import MyPermits from './components/parking/MyPermits';
+import SessionExpired from './components/SessionExpired';
 
 function App() {
   const { isLoggedIn } = useAuth();
@@ -44,6 +45,7 @@ function App() {
           <Route path="/pending-ids" element={<PendingIDs /> } />
           <Route path="/unauthorized" element={<Unauthorized />} />
           <Route path="/my-permits" element={<MyPermits />} />
+          <Route path="/session_expired" element={<SessionExpired />} />
         </Routes>
       </div>
 

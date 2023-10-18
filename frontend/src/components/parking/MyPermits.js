@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Table from 'react-bootstrap/Table';
 import { getUser } from '../Utils';
+import { parkingApi } from '../AxiosUtils';
 
 export default class MyPermits extends React.Component {
   state = {
@@ -16,12 +17,7 @@ export default class MyPermits extends React.Component {
       return;
     }
 
-    const token = localStorage.getItem('jwt_token');
-    const headers = {
-        'Authorization': `Bearer ${token}`
-    };
-
-    axios.get(`${process.env.REACT_APP_API_URL}/permits/${user.id}`, { headers: headers })
+    parkingApi.get(`/permits/${user.id}`)
       .then(res => {
         this.setState({ applications: res.data });
       })
@@ -38,20 +34,15 @@ export default class MyPermits extends React.Component {
   }
 
   revokePermit = id => {
-    const token = localStorage.getItem('jwt_token');
-    const headers = {
-        'Authorization': `Bearer ${token}`
-    };
-
-    axios.put(`${process.env.REACT_APP_API_URL}/revoke/${id}`, {}, { headers: headers })
-        .then((res) => {
-          console.log(res.data);
-          window.location.reload(false);
-        })
-        .catch(error => {
-          console.log(error);
-          // Consider handling 401 or 403 errors here to redirect or show a message
-        });
+    parkingApi.put(`/revoke/${id}`)
+      .then((res) => {
+        console.log(res.data);
+        window.location.reload(false);
+      })
+      .catch(error => {
+        console.log(error);
+        // Consider handling 401 or 403 errors here to redirect or show a message
+      });
   };
 
   render() {
