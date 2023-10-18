@@ -76,7 +76,7 @@ services:
       - "postgres_backend"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`localhost`, `127.0.0.1`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.backend.rule=Host(`localhost`, `127.0.0.1`)"
       - "traefik.http.routers.backend.entrypoints=api"
       - "traefik.http.services.backend.loadbalancer.server.port=8888"
     networks:
@@ -205,7 +205,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.library_api.rule=Host(`localhost`, `127.0.0.1`)"
       - "traefik.http.routers.library_api.entrypoints=library_service"
-      - "traefik.http.services.library_api.loadbalancer.server.port=8000"
+      - "traefik.http.services.library_api.loadbalancer.server.port=8003"
 
   library_db:
     image: mongo

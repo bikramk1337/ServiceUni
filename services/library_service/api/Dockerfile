@@ -9,7 +9,7 @@ RUN npm install
 # Copy our app
 COPY . /server
 
-EXPOSE 8000
+EXPOSE 8003
 
 # CMD ["node", "server.js"]
 CMD ["npm", "run", "dev"]

@@ -3,6 +3,7 @@ import axios from "axios";
 import Table from "react-bootstrap/Table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faX } from "@fortawesome/free-solid-svg-icons";
+import { parkingApi, authApi } from "../AxiosUtils";
 
 export default class PendingApplications extends React.Component {
   state = {
@@ -15,19 +16,14 @@ export default class PendingApplications extends React.Component {
       Authorization: `Bearer ${token}`,
     };
 
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/pending-permits/`, {
-        headers: headers,
-      })
+    parkingApi
+      .get(`/pending-permits/`, { headers: headers })
       .then((res) => {
         const applications = res.data;
 
         // Fetching user details for each application
         const fetchUsersPromises = applications.map((app) => {
-          return axios.get(
-            `${process.env.REACT_APP_AUTH_API_URL}/api/v1/users/${app.user_id}`,
-            { headers: headers }
-          );
+          return authApi.get(`/api/v1/users/${app.user_id}`, { headers: headers });
         });
 
         return Promise.all(fetchUsersPromises).then((userResponses) => {
@@ -52,17 +48,14 @@ export default class PendingApplications extends React.Component {
       Authorization: `Bearer ${token}`,
     };
 
-    axios
-      .put(
-        `${process.env.REACT_APP_API_URL}/approve/${id}`,
-        {},
-        { headers: headers }
-      )
+    parkingApi
+      .put(`/approve/${id}`, {}, { headers: headers })
       .then((res) => {
         console.log(res.data);
         window.location.reload(false);
       });
   };
+
 
   rejectApplication = (id) => {
     const token = localStorage.getItem("jwt_token");
@@ -70,12 +63,8 @@ export default class PendingApplications extends React.Component {
       Authorization: `Bearer ${token}`,
     };
 
-    axios
-      .put(
-        `${process.env.REACT_APP_API_URL}/reject/${id}`,
-        {},
-        { headers: headers }
-      )
+    parkingApi
+      .put(`/reject/${id}`, {}, { headers: headers })
       .then((res) => {
         console.log(res.data);
         window.location.reload(false);

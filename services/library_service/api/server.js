@@ -4,7 +4,7 @@ import express from "express"
 import cors from "cors"
 import { ERROR } from "./src/constant.js"
 const app = express()
-const PORT = process.env.NODE_ENV || 8000
+const PORT = process.env.PORT || 8003
 
 //connect to database
 import { connectDB } from "./src/config/dbConfig.js"

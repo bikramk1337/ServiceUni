@@ -1,47 +1,56 @@
 import React from 'react';
-import axios from 'axios';
 import Table from 'react-bootstrap/Table';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
+import { parkingApi, authApi } from '../AxiosUtils'; 
 
 export default class ActivePermits extends React.Component {
   state = {
     applications: []
   }
 
-  async componentDidMount() {
-    const token = localStorage.getItem('jwt_token');
+  componentDidMount() {
+    const token = localStorage.getItem("jwt_token");
     const headers = {
-        'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     };
-  
-    try {
-      const { data: applications } = await axios.get(`${process.env.REACT_APP_API_URL}/active-permits/`, { headers });
-      for (let app of applications) {
-        const { data: user } = await axios.get(`${process.env.REACT_APP_AUTH_API_URL}/api/v1/users/${app.user_id}`, { headers });
-        app.user = user;
-      }
-      this.setState({ applications });
-    } catch (error) {
-      console.log(error);
-    }
+
+    parkingApi
+      .get(`/active-permits/`, { headers: headers })
+      .then((res) => {
+        const applications = res.data;
+
+        // Fetching user details for each application
+        const fetchUsersPromises = applications.map((app) => {
+          return authApi.get(`/api/v1/users/${app.user_id}`, { headers: headers });
+        });
+
+        return Promise.all(fetchUsersPromises).then((userResponses) => {
+          userResponses.forEach((userRes, index) => {
+            applications[index].user = userRes.data;
+          });
+
+          return applications;
+        });
+      })
+      .then((appsWithUsers) => {
+        this.setState({ applications: appsWithUsers });
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
   }
   
   revokePermit = id => {
-    const token = localStorage.getItem('jwt_token');
-    const headers = {
-        'Authorization': `Bearer ${token}`
-    };
-
-    axios.put(`${process.env.REACT_APP_API_URL}/revoke/${id}`, {}, { headers: headers })
-        .then((res) => {
-          console.log(res.data);
-          window.location.reload(false);
-        })
-        .catch(error => {
-          console.log(error);
-          // Consider handling 401 or 403 errors here to redirect or show a message
-        });
+    parkingApi.put(`/revoke/${id}`)
+      .then((res) => {
+        console.log(res.data);
+        window.location.reload(false);
+      })
+      .catch(error => {
+        console.log(error);
+        // Consider handling 401 or 403 errors here to redirect or show a message
+      });
   };
 
   render() {
@@ -87,5 +96,4 @@ export default class ActivePermits extends React.Component {
       </div>
     );
   }
-  
 }

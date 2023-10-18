@@ -3,6 +3,8 @@ import axios from 'axios';
 import Table from 'react-bootstrap/Table';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faX } from "@fortawesome/free-solid-svg-icons";
+import { idCardApi } from '../AxiosUtils';
+
 
 export default class PendingIDs extends React.Component {
   state = {
@@ -15,7 +17,7 @@ export default class PendingIDs extends React.Component {
         'Authorization': `Bearer ${token}`
     };
 
-    axios.get(`${process.env.REACT_APP_ID_API_URL}/all_requests/`, { headers: headers })
+    idCardApi.get(`/all_requests/`, { headers: headers })
       .then(res => {
         const requests = res.data;
         this.setState({ requests });
