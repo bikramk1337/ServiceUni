@@ -41,8 +41,13 @@ export default class ActivePermits extends React.Component {
       });
   }
   
-  revokePermit = id => {
-    parkingApi.put(`/revoke/${id}`)
+  revokePermit = (id) => {
+    const token = localStorage.getItem("jwt_token");
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    
+    parkingApi.put(`/revoke/${id}`, {}, { headers: headers })
       .then((res) => {
         console.log(res.data);
         window.location.reload(false);
